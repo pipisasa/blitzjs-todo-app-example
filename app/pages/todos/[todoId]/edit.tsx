@@ -41,8 +41,10 @@ export const EditTodo = () => {
                 id: todo.id,
                 ...values,
               })
-              await setQueryData(updated)
-              router.push(Routes.ShowTodoPage({ todoId: updated.id }))
+              if (updated) {
+                await setQueryData(updated)
+                router.push(Routes.ShowTodoPage({ todoId: updated.id }))
+              }
             } catch (error: any) {
               console.error(error)
               return {

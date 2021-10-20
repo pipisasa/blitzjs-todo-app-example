@@ -1,20 +1,24 @@
 import { ReactNode } from "react"
 import { Head } from "blitz"
+import MainAppBar from "./AppBar"
 
 type LayoutProps = {
   title?: string
   children: ReactNode
 }
 
-const Layout = ({ title, children }: LayoutProps) => {
+const Layout = ({ title = "Todo App", children }: LayoutProps) => {
   return (
     <>
       <Head>
-        <title>{title || "todo-app"}</title>
+        <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      {children}
+      <header>
+        <MainAppBar title={title} />
+      </header>
+      <main>{children}</main>
+      <footer></footer>
     </>
   )
 }

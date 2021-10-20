@@ -1,14 +1,14 @@
 import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getTodos from "app/todos/queries/getTodos"
+import getMyTodos from "app/todos/queries/getMyTodos"
 
 const ITEMS_PER_PAGE = 100
 
 export const TodosList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
-  const [{ todos, hasMore }] = usePaginatedQuery(getTodos, {
+  const [{ todos, hasMore }] = usePaginatedQuery(getMyTodos, {
     orderBy: { id: "asc" },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
@@ -23,7 +23,9 @@ export const TodosList = () => {
         {todos.map((todo) => (
           <li key={todo.id}>
             <Link href={Routes.ShowTodoPage({ todoId: todo.id })}>
-              <a>{todo.name}</a>
+              <a>
+                {todo.title}: {todo.status}
+              </a>
             </Link>
           </li>
         ))}
@@ -62,6 +64,6 @@ const TodosPage: BlitzPage = () => {
 }
 
 TodosPage.authenticate = true
-TodosPage.getLayout = (page) => <Layout>{page}</Layout>
+TodosPage.getLayout = (page) => <Layout title="Todos list">{page}</Layout>
 
 export default TodosPage

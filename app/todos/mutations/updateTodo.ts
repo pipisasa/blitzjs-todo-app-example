@@ -4,16 +4,17 @@ import { z } from "zod"
 
 const UpdateTodo = z.object({
   id: z.number(),
-  name: z.string(),
+  title: z.string(),
+  status: z.enum(["TODO", "DOING", "DONE"]),
 })
 
 export default resolver.pipe(
   resolver.zod(UpdateTodo),
   resolver.authorize(),
-  async ({ id, ...data }) => {
+  async ({ id, ...data }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const todo = await db.todo.update({ where: { id }, data })
-
+    await db.todo.updateMany({ where: { id, authorId: ctx.session.userId }, data })
+    const todo = await db.todo.findUnique({ where: { id } })
     return todo
   }
 )
